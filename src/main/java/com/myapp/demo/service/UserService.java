@@ -6,7 +6,7 @@ import com.myapp.demo.domain.User;
 import com.myapp.demo.repository.AuthorityRepository;
 import com.myapp.demo.repository.UserRepository;
 import com.myapp.demo.security.AuthoritiesConstants;
-import com.myapp.demo.security.SecurityUtils;
+//import com.myapp.demo.security.SecurityUtils;
 import com.myapp.demo.service.dto.AdminUserDTO;
 import com.myapp.demo.service.dto.UserDTO;
 import java.time.Instant;
@@ -35,20 +35,14 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
+    //    private final PasswordEncoder passwordEncoder;
 
     private final AuthorityRepository authorityRepository;
 
     private final CacheManager cacheManager;
 
-    public UserService(
-        UserRepository userRepository,
-        PasswordEncoder passwordEncoder,
-        AuthorityRepository authorityRepository,
-        CacheManager cacheManager
-    ) {
+    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
     }
@@ -73,7 +67,7 @@ public class UserService {
             .findOneByResetKey(key)
             .filter(user -> user.getResetDate().isAfter(Instant.now().minus(1, ChronoUnit.DAYS)))
             .map(user -> {
-                user.setPassword(passwordEncoder.encode(newPassword));
+                //                user.setPassword(passwordEncoder.encode(newPassword));
                 user.setResetKey(null);
                 user.setResetDate(null);
                 this.clearUserCaches(user);
@@ -111,10 +105,10 @@ public class UserService {
                 }
             });
         User newUser = new User();
-        String encryptedPassword = passwordEncoder.encode(password);
+        //        String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(userDTO.getLogin().toLowerCase());
         // new user gets initially a generated password
-        newUser.setPassword(encryptedPassword);
+        //        newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
         if (userDTO.getEmail() != null) {
@@ -159,8 +153,8 @@ public class UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
-        user.setPassword(encryptedPassword);
+        //        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        //        user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
@@ -238,37 +232,37 @@ public class UserService {
      * @param imageUrl  image URL of user.
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        SecurityUtils
-            .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
-            .ifPresent(user -> {
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                if (email != null) {
-                    user.setEmail(email.toLowerCase());
-                }
-                user.setLangKey(langKey);
-                user.setImageUrl(imageUrl);
-                this.clearUserCaches(user);
-                log.debug("Changed Information for User: {}", user);
-            });
+        //        SecurityUtils
+        //            .getCurrentUserLogin()
+        //            .flatMap(userRepository::findOneByLogin)
+        //            .ifPresent(user -> {
+        //                user.setFirstName(firstName);
+        //                user.setLastName(lastName);
+        //                if (email != null) {
+        //                    user.setEmail(email.toLowerCase());
+        //                }
+        //                user.setLangKey(langKey);
+        //                user.setImageUrl(imageUrl);
+        //                this.clearUserCaches(user);
+        //                log.debug("Changed Information for User: {}", user);
+        //            });
     }
 
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
-        SecurityUtils
-            .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
-            .ifPresent(user -> {
-                String currentEncryptedPassword = user.getPassword();
-                if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
-                    throw new InvalidPasswordException();
-                }
-                String encryptedPassword = passwordEncoder.encode(newPassword);
-                user.setPassword(encryptedPassword);
-                this.clearUserCaches(user);
-                log.debug("Changed password for User: {}", user);
-            });
+        //        SecurityUtils
+        //            .getCurrentUserLogin()
+        //            .flatMap(userRepository::findOneByLogin)
+        //            .ifPresent(user -> {
+        //                String currentEncryptedPassword = user.getPassword();
+        ////                if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
+        ////                    throw new InvalidPasswordException();
+        ////                }
+        ////                String encryptedPassword = passwordEncoder.encode(newPassword);
+        ////                user.setPassword(encryptedPassword);
+        //                this.clearUserCaches(user);
+        //                log.debug("Changed password for User: {}", user);
+        //            });
     }
 
     @Transactional(readOnly = true)
@@ -288,7 +282,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
-        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+        //        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+        return null;
     }
 
     /**

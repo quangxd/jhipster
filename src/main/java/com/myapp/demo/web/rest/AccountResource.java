@@ -2,7 +2,7 @@ package com.myapp.demo.web.rest;
 
 import com.myapp.demo.domain.User;
 import com.myapp.demo.repository.UserRepository;
-import com.myapp.demo.security.SecurityUtils;
+//import com.myapp.demo.security.SecurityUtils;
 import com.myapp.demo.service.MailService;
 import com.myapp.demo.service.UserService;
 import com.myapp.demo.service.dto.AdminUserDTO;
@@ -114,24 +114,24 @@ public class AccountResource {
      */
     @PostMapping("/account")
     public void saveAccount(@Valid @RequestBody AdminUserDTO userDTO) {
-        String userLogin = SecurityUtils
-            .getCurrentUserLogin()
-            .orElseThrow(() -> new AccountResourceException("Current user login not found"));
-        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
-            throw new EmailAlreadyUsedException();
-        }
-        Optional<User> user = userRepository.findOneByLogin(userLogin);
-        if (!user.isPresent()) {
-            throw new AccountResourceException("User could not be found");
-        }
-        userService.updateUser(
-            userDTO.getFirstName(),
-            userDTO.getLastName(),
-            userDTO.getEmail(),
-            userDTO.getLangKey(),
-            userDTO.getImageUrl()
-        );
+        //        String userLogin = SecurityUtils
+        //            .getCurrentUserLogin()
+        //            .orElseThrow(() -> new AccountResourceException("Current user login not found"));
+        //        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+        //        if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
+        //            throw new EmailAlreadyUsedException();
+        //        }
+        //        Optional<User> user = userRepository.findOneByLogin(userLogin);
+        //        if (!user.isPresent()) {
+        //            throw new AccountResourceException("User could not be found");
+        //        }
+        //        userService.updateUser(
+        //            userDTO.getFirstName(),
+        //            userDTO.getLastName(),
+        //            userDTO.getEmail(),
+        //            userDTO.getLangKey(),
+        //            userDTO.getImageUrl()
+        //        );
     }
 
     /**
